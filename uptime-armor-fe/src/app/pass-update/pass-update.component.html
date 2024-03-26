@@ -1,0 +1,47 @@
+<div class="register-page col-md-6 offset-md-3">
+    <h3>Update Password</h3>
+    <form (ngSubmit)="onSubmit()" #passwordForm="ngForm">
+
+        <div class="form-group">
+            <label>Old Password</label>
+            <input type="password" class="form-control" id="oldPassword" 
+                [(ngModel)]="userPassUpdate.oldPassword" #oldPasswordInput="ngModel" name="oldPassword" required="true">
+                <div *ngIf="  ( newPassword.touched && userPassUpdate.newPassword !== null && userPassUpdate.newPassword !== '' )">
+                    <span class="error-message" *ngIf="oldPasswordInput.errors?.['required']">Password is required.</span>
+                </div>
+        </div>
+        <div class="form-group">
+            <label>New Password</label>
+    <input type="password" class="form-control" id="newPassword" 
+           [(ngModel)]="userPassUpdate.newPassword" name="newPassword" #newPassword="ngModel" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}$"
+           (input)="checkPasswordStrength(userPassUpdate.newPassword)">
+           <div *ngIf="userPassUpdate.oldPassword && userPassUpdate.newPassword && userPassUpdate.oldPassword === userPassUpdate.newPassword" class="text-danger">New Password Cannot be same as Old Password</div>
+    <div *ngIf="newPassword.errors && (newPassword.dirty || newPassword.touched) ">
+        <span class="error-message" *ngIf="newPassword.errors?.['required']">Password is required.</span>
+        <span class="error-message" *ngIf="newPassword.errors?.['pattern']">Password must contain at least 8 characters with one uppercase letter, one lowercase letter, one number, and one special character.</span>
+    </div>
+    <div *ngIf="userPassUpdate.newPassword">
+        <div [style.color]="
+            passwordStrength === 'Very Weak' ? 'red' :
+            passwordStrength === 'Weak' ? 'orange' :
+            passwordStrength === 'Fair' ? 'yellow' :
+            passwordStrength === 'Strong' ? 'light-green' :
+            passwordStrength === 'Very Strong' ? 'green' : ''
+        " style="background-color: cadetblue; border-radius: 20px;"
+        >
+            Password Strength: {{ passwordStrength }}
+        </div>
+    </div>
+    </div>
+        <div class="form-group">
+            <label>Re-Enter New Password</label>
+            <input type="password" class="form-control" id="reEnterNewPassword" 
+                [(ngModel)]="reEnterNewPassword" name="reEnterNewPassword" required>
+            <div *ngIf="userPassUpdate.newPassword !== reEnterNewPassword" class="text-danger">Passwords do not match</div>
+        </div>
+        <div class="form-group text-right" style="margin-top: 20px;">
+            <button class="btn btn-warn" (click)="cancel()" type = "submit">Cancel</button>
+            <button class="btn btn-success" type="submit" [disabled]="passwordForm.invalid || userPassUpdate.newPassword !== reEnterNewPassword">Update</button>
+        </div>
+    </form>
+</div>

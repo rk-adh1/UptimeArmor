@@ -1,0 +1,14 @@
+<div *ngIf="!(isLoggedIn$ | async)" >
+    <a href="login" class="btn float-right login_btn">Login</a>
+</div>
+<div class="carousel">
+    <div class="carousel-images" [@slide]="currentIndex">
+    <img src="../../assets/Image1.jpeg" alt="Image 1">
+    <img src="../../assets/813527.jpg" alt="Image 2">
+    <img src="../../assets/Animated-Matrix-Eagle-Background-desktop-wallpapers-hd-images-amazing-background-images-mac-desktop-wallpapers-4k-hd-smart-phone-1920x1200.jpg" alt="Image 3">
+    </div>
+</div>
+<div class="panel panel-heading panel-body " style="text-align: center;">
+    <h3>About US</h3>
+    <p> This is an Advance System Project Application<br>Created By: Rahul Kumar Adhimulam <br>Professor Dr. Narasimha Paravastu</p>
+</div>

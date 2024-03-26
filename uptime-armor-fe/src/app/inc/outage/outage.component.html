@@ -1,0 +1,92 @@
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-1 col-md-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col col-sm-3 col-xs-12">
+                            <h4 class="title">Outages</h4>
+                        </div>
+                        <div class="col-sm-9 col-xs-12 text-right">
+                            <div class="btn_group">
+                                <button (click)="ps.toggleAdvSearch()" class="btn btn-default"  >
+                                     
+                                    <i class="fa fa-filter" *ngIf="!ps.advSearch" title="AdvanceSearch"></i>
+                                    <i class="fa fa-times-circle" *ngIf="ps.advSearch" title=" Close AdvanceSearch"></i>
+                                </button>
+                                <input type="text" class="form-control" *ngIf="ps.advSearch" [(ngModel)]="ps.key" (ngModelChange)="ps.filterItems()" placeholder="Key">
+                                <input type="text" class="form-control" [(ngModel)]="ps.searchTerm" (ngModelChange)="ps.filterItems()" [placeholder]="ps.advSearch ? 'Value' : 'Search'">                                    
+                                <a href="incident/register" class="btn btn-default" title="Add"><i class="fa fa-plus"></i></a>
+                                <button (click)="reload()" class="btn btn-default" title="Reload"><i class="fa fa-refresh"></i></button>
+                                <button class="btn btn-default" (click)="exportOutageReports()" title="Export to Excel" *ngIf="authService.isEmployee() || authService.isManager()">
+                                    <span><i class="fa fa-download"></i>
+                                    <i class="fa fa-table"> </i></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Incident Id</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>BusinessUnit</th>
+                                <th>Status</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let incident of ps.paginatedItems">
+                                <tr>
+                                    <td>{{incident.incidentId}}</td>
+                                    <td>{{incident.description}}</td>
+                                    <td>{{incident.category}}</td>
+                                    <td>{{incident.businessUnit.businessUnitId}}</td>
+                                    <td>{{incident.status}}</td>
+                                    <td>
+                                        <ul class="action-list">
+                                            <li><a [routerLink]="['/incident', incident.incidentId, 'update']" data-tip="edit"><i class="fa fa-edit"></i></a></li>
+                                            <li><a [routerLink]="['/incident', incident.incidentId, 'viewIncident']" data-tip="viewIncident"><i class="fa fa-info-circle"></i></a></li>
+                                            <!-- <li><a href="employee/delete" data-tip="delete"><i class="fa fa-trash"></i></a></li> -->
+                                        </ul>
+                                    </td>
+                                </tr>
+                                
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">  
+                        <div class="pagination col col-sm-6 col-xs-6">
+                           <select  [(ngModel)]="ps.itemsPerPage" (change)="ps.onItemsPerPageChange()">
+                                <option value=5>5</option>
+                                <option value=10>10</option>
+                                <option value=20>20</option>
+                            </select>
+                          <span class="pagination-text">  Showing <b>{{ ps.showingFrom }}</b> - <b>{{ ps.showingTo }}</b> out of <b>{{ ps.totalEntries }}</b> entries
+                          </span>
+                        </div>
+                            <div class="col-sm-6 col-xs-6">
+                            <ul class="pagination hidden-xs pull-right">
+                                <li><a (click)="ps.onPageChange(1)"><</a></li>
+                                <li *ngFor="let page of ps.totalPages" [class.active]="ps.currentPage === page">
+                                    <a (click)="ps.onPageChange(page)">{{ page }}</a>
+                                </li>
+                                <li><a (click)="ps.onPageChange(ps.totalPages.length)">></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

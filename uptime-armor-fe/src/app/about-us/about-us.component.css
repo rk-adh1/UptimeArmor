@@ -1,0 +1,27 @@
+.login_btn{
+    color: black;
+    background-color: #FFC312;
+    width: 100px;
+    }
+    
+.login_btn:hover{
+    color: black;
+    background-color: white;
+    }
+
+
+.carousel {
+        width: 100%; /* Adjust the width as needed */
+        overflow: hidden;
+        position: relative;
+      }
+      
+.carousel-images {
+        display: flex; /* Display images in a row */
+        transition: transform 0.5s ease; /* Smooth transition */
+      }
+      
+.carousel-images img {
+        width: 100%; /* Full width */
+        height: auto; /* Maintain aspect ratio */
+      }

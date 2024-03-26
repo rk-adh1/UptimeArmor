@@ -1,0 +1,95 @@
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-1 col-md-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col col-sm-3 col-xs-12">
+                            <h4 class="title">Incident Detials</h4>
+                        </div>
+                        <div class="col-sm-9 col-xs-12 text-right">
+                            <div class="btn_group">
+                                
+                                <a [routerLink]="['/incident', incident.incidentId, 'update']" class="btn btn-default" title="Edit"><i class="fa fa-edit"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>IncidentId: {{incident.incidentId}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                <tr>
+                                    <td>Description: {{incident.description}}</td>
+                                </tr>
+                           
+                                <tr>
+                                    <td colspan="100%">
+                                        <div class="column">
+                                            <p>BusinessUnitId: {{incident.businessUnit.businessUnitId}}</p>
+                                            <p>BusinessUnitName: {{incident.businessUnit.businessUnitName}}</p>
+                                            <p>AssigneeId: {{incident.assignee.employeeId}}</p>
+                                            <p>AssigneeName: {{incident.assignee.firstName}} {{incident.assignee.lastName}} </p>
+                                            <p>ReporterId: {{incident.reporter.employeeId}}</p>
+                                            <p>ReporterName: {{incident.reporter.firstName}} {{incident.reporter.lastName}} </p>
+                                        </div>
+                                        <div class="column">
+                                            <p>Category: {{incident.category}}</p>
+                                            <p>Severity: {{incident.severity}}</p>
+                                            <p>Priority: {{incident.priority}}</p>
+                                            <p>creationDate: {{incident.creationDate | date: 'MM-dd-yyyy HH:mm:ss' : 'CST'}} CST</p>
+                                            <p>closeDate: {{incident.closedDate | date: 'MM-dd-yyyy HH:mm:ss' : 'CST'}} CST</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-body table-responsive">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td colspan="100%" class="register-page form-group">
+                                    <input type="text" class="form-control" id="note" [(ngModel)] = "commentM.note" 
+                                    placeholder="Enter Comment"  name = "note">
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td colspan="50%">
+                                    <button (click)="showCommentDetails()"
+                                            class="btn btn-link" style="color: #FFC312;">Show Comments<i class="fa fa-plus mr-3"
+                                                *ngIf="!this.showComments"></i><i class="fa fa-minus"
+                                                *ngIf="this.showComments"></i></button>
+                                </td>
+                                <td colspan="50%" style="text-align: right;">
+                                    
+                                    <button class="btn btn-viCancel"  (click)="cancel()"  >Cancel</button>
+                                    <button (click)="addComment()" class="btn btn-viSuccess" >AddComment</button>
+                               
+                                </td>
+                            </tr>
+                            <ng-container *ngIf="showComments">
+                                <tr *ngFor="let comment of comments">
+                                    <td>{{comment.employee.employeeId}} <br> 
+                                        {{ comment.employee.firstName}} {{comment.employee.lastName}}
+                                    </td>
+                                    <td colspan="70%">{{ comment.note }}</td>
+                                    <td>{{ comment.creationDate | date: 'MM-dd-yyyy HH:mm:ss' : 'CST'}} CST</td>
+                                    <td><a *ngIf="this.currentUser === comment.employee.employeeId" (click)="deleteComment(comment.commentId)" data-tip="delete"><i class="fa fa-trash"></i></a></td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

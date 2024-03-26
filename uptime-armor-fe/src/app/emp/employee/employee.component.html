@@ -1,0 +1,105 @@
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-1 col-md-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col col-sm-3 col-xs-12">
+                            <h4 class="title">Employees</h4>
+                        </div>
+                        <div class="col-sm-9 col-xs-12 text-right">
+                            <div class="btn_group">
+                                <button (click)="ps.toggleAdvSearch()" class="btn btn-default"  >
+                                     
+                                    <i class="fa fa-filter" *ngIf="!ps.advSearch" title="AdvanceSearch"></i>
+                                    <i class="fa fa-times-circle" *ngIf="ps.advSearch" title=" Close AdvanceSearch"></i>
+                                </button>
+                                <input type="text" class="form-control" *ngIf="ps.advSearch" [(ngModel)]="ps.key" (ngModelChange)="ps.filterItems()" placeholder="Key">
+                                <input type="text" class="form-control" [(ngModel)]="ps.searchTerm" (ngModelChange)="ps.filterItems()" [placeholder]="ps.advSearch ? 'Value' : 'Search'">                                    
+                                <a href="employee/register" class="btn btn-default" title="Add" *ngIf="authService.isAdmin() || authService.isManager()"><i class="fa fa-plus"></i></a>
+                                <button (click)="reload()" class="btn btn-default" title="Reload"><i class="fa fa-refresh"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>FirstName</th>
+                                <th>LastName</th>
+                                <th>EmployeeStatus</th>
+                                <th *ngIf="!authService.isEmployee()">Action</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let employee of ps.paginatedItems">
+                                <tr>
+                                    <td>
+                                        
+                                        <button (click)="toggleDetails(employee)"
+                                            class="btn btn-link " style="color: #FFC312;">{{employee.employeeId}} <i class="fa fa-plus"
+                                                *ngIf="!employee.showDetails"></i><i class="fa fa-minus"
+                                                *ngIf="employee.showDetails"></i></button>
+                                    </td>
+                                    <td>{{employee.firstName}}</td>
+                                    <td>{{employee.lastName}}</td>
+                                    <td>{{employee.employmentStatus}}</td>
+                                    <td>
+                                        <ul class="action-list" *ngIf="!authService.isEmployee()">
+                                            <li><a [routerLink]="['/employee', employee.employeeId, 'update']" data-tip="edit"><i class="fa fa-edit"></i></a></li>
+                                            <!-- <li><a href="employee/delete" data-tip="delete"><i class="fa fa-trash"></i></a></li> -->
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="employee.showDetails">
+                                    <td colspan="100%">
+                                        <div class="column">
+                                            <p>DOB: {{employee.dateOfBirth | date: 'MM-dd-yyyy'}}</p>
+                                            <p>Gender: {{employee.gender}}</p>
+                                            <p>Address: {{employee.address}}</p>
+                                            <p>PhoneNumer: {{employee.phoneNumber}}</p>
+                                        </div>
+                                        <div class="column">
+                                            <p>Email: {{employee.email}}</p>
+                                            <p>JobTitle: {{employee.jobTitle}}</p>
+                                            <p>Manger: {{employee.managerId}}</p>
+                                            <p>BusinessUnit: {{employee.businessUnit.businessUnitId}}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">  
+                        <div class="pagination col col-sm-6 col-xs-6">
+                           <select  [(ngModel)]="ps.itemsPerPage" (change)="ps.onItemsPerPageChange()">
+                                <option value=5>5</option>
+                                <option value=10>10</option>
+                                <option value=20>20</option>
+                            </select>
+                          <span class="pagination-text">  Showing <b>{{ ps.showingFrom }}</b> - <b>{{ ps.showingTo }}</b> out of <b>{{ ps.totalEntries }}</b> entries
+                          </span>
+                        </div>
+                            <div class="col-sm-6 col-xs-6">
+                            <ul class="pagination hidden-xs pull-right">
+                                <li><a (click)="ps.onPageChange(1)"><</a></li>
+                                <li *ngFor="let page of ps.totalPages" [class.active]="ps.currentPage === page">
+                                    <a (click)="ps.onPageChange(page)">{{ page }}</a>
+                                </li>
+                                <li><a (click)="ps.onPageChange(ps.totalPages.length)">></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

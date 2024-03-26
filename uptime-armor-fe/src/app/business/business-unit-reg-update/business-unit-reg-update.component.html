@@ -1,0 +1,40 @@
+<div class = "register-page col-md-6 offset-md-3">
+    <h3>{{ isUpdating ? 'Update BusinessUnit' : 'Add BusinessUnit' }}</h3>
+    <form  #bruForm="ngForm" (ngSubmit) = "onSubmit()">
+        <div class ="form-group" *ngIf="isUpdating"> 
+            <label>BusinessUnitId</label>
+            <input type="text" readonly class="form-control" id="businessUnitId" 
+            [(ngModel)] = "this.businessUnitId" name = "businessUnitId">
+        </div>
+        <div class ="form-group">
+            <label>BusinessUnitName</label>
+            <input type="text" class="form-control"  id="businessUnitName" 
+            [(ngModel)] = "businessUnit.businessUnitName" name = "businessUnitName" #businessUnitName="ngModel" required="true">
+            <div *ngIf="businessUnitName.invalid && (businessUnitName.dirty || businessUnitName.touched)">
+                <span class="error-message" *ngIf="businessUnitName.errors?.['required']">Business Unit Name is required.</span>
+            </div>
+        </div>
+        <div class ="form-group">
+            <label>Description</label>
+            <input type="text" class="form-control"  id="description" 
+            [(ngModel)] = "businessUnit.description" name = "description">
+        </div>
+        <div class ="form-group">
+            <label>MissionAndVision</label>
+            <input type="text" class="form-control" id="missionAndVision" 
+            [(ngModel)] = "businessUnit.missionAndVision" name = "missionAndVision">
+        </div>
+        <div class ="form-group">
+            <label>IndustrySector</label>
+            <input type="text" class="form-control" id="industrySector" 
+            [(ngModel)] = "businessUnit.industrySector" name = "industrySector" #industrySector="ngModel" required="true">
+            <div *ngIf="industrySector.invalid && (industrySector.dirty || industrySector.touched)">
+                <span class="error-message" *ngIf="industrySector.errors?.['required']">industrySector is required.</span>
+            </div>
+        </div>
+        <div class="form-group text-right" style="margin-top: 20px;">
+        <button class="btn btn-warn" (click)="cancel()" type = "submit">Cancel</button>
+        <button class="btn btn-success" type = "submit" [disabled]="bruForm.invalid">{{ isUpdating ? 'Update' : 'Add' }}</button>
+        </div>
+    </form>
+</div>

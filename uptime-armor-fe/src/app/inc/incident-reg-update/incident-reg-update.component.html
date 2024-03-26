@@ -1,0 +1,111 @@
+
+
+<div class = "register-page col-md-6 offset-md-3">
+    <h3>{{ isUpdating ? 'Update Incident' : 'Add Incident' }}</h3>
+    <form #iruForm="ngForm" (ngSubmit) = "onSubmit()">
+        <div class ="form-group" *ngIf="isUpdating"> 
+            <label>IncidentId</label>
+            <input type="text" readonly class="form-control" id="incidentId" 
+           [(ngModel)] = "this.incidentId" name = "incidentId">
+        </div>
+        <div class ="form-group" > 
+            <label>Description</label>
+            <input type="text" class="form-control" id="description"
+           [(ngModel)] = "incidentM.description" name = "description">
+        </div>
+        <div class ="form-group" *ngIf="isUpdating">
+            <label>Reporter</label>
+            <input type="text" readonly class="form-control" id="reporter" 
+            [(ngModel)] = "incidentM.reporter.employeeId" name = "reporter">
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select class="form-control" id="category" [(ngModel)]="incidentM.category" name="category" required="true">
+                <option value="PROD">PROD</option>
+                <option value="DEV">DEV</option>
+                <option value="TEST">TEST</option>
+            </select>
+        </div>
+        <div class ="form-group">
+            <label>CreationDate</label>
+            <input type="datetime-local" class="form-control" id="creationDate" 
+            [(ngModel)] = "incidentM.creationDate" #creationDate="ngModel" name = "creationDate" (change)="checkClosedDateValidity()" [required]="!!incidentM.closedDate">            
+            <span class="error-message" *ngIf="creationDate.invalid">
+                CreationDate is required.
+            </span>
+        </div>
+        <div class ="form-group">
+            <label>ClosedDate</label>
+            <input type="datetime-local" class="form-control" id="closedDate" 
+            [(ngModel)] = "incidentM.closedDate" name = "closedDate" #closedDate="ngModel" (change)="checkClosedDateValidity()" [required]="incidentM.status === 'Closed'">
+            <div *ngIf="closedDateError" class="text-danger">Closed date must be greater than creation date.</div>
+            <span *ngIf="closedDate.errors?.['required']">Closed Date is Required.</span>
+        </div>
+        <div class="form-group">
+            <label for="severity">Severity (0 = low, 3 = high )</label>
+            <select class="form-control" id="severity" [(ngModel)]="incidentM.severity" name="severity" #severity="ngModel" required="true" >
+                <option value=0>Informational</option>
+                <option value=1>Minor</option>
+                <option value=2>Major</option>
+                <option value=3>Critical</option>
+            </select>
+            <div *ngIf="severity.invalid && (severity.dirty || severity.touched)">
+                <span class="error-message" *ngIf="severity.errors?.['required']">Severity is required.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="priority">Priority (0 = high, 3 = low )</label>
+            <select class="form-control" id="priority" [(ngModel)]="incidentM.priority" name="priority" #priority="ngModel" required="true">
+                <option value=3>Low</option>
+                <option value=2>Medium</option>
+                <option value=1>High</option>
+                <option value=0>Critical</option>
+            </select>
+            <div *ngIf="priority.invalid && (priority.dirty || priority.touched)">
+                <span class="error-message" *ngIf="priority.errors?.['required']">Priority is required.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="businessUnit">BusinessUnit</label>
+            <select class="form-control" id="businessUnit" name="businessUnit" [(ngModel)]="this.selectedBUId" (change)="onBusinessUnitChange($event)" #businessUnit="ngModel" required="true">
+                    <option *ngFor="let businessUnit of businessUnits | async" [ngValue]="businessUnit.businessUnitId">
+                        {{ businessUnit.businessUnitId }} - {{ businessUnit.businessUnitName }}
+                    </option>
+            </select>
+            <div *ngIf="businessUnit.invalid && (businessUnit.dirty || businessUnit.touched)">
+                <span class="error-message" *ngIf="businessUnit.errors?.['required']">BusinessUnit is required.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="assignee">Assignee</label>
+            <select class="form-control" id="assignee" name="assignee" [(ngModel)]="this.selectedAssigneeId" #assignee="ngModel" required="true">
+                    <option *ngFor="let employee of employees | async" [ngValue]="employee.employeeId">
+                        {{ employee.employeeId }} - {{ employee.firstName }} {{ employee.lastName }}
+                    </option>
+            </select>
+            <div *ngIf="assignee.invalid && (assignee.dirty || assignee.touched)">
+                <span class="error-message" *ngIf="assignee.errors?.['required']">Assignee is required.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select class="form-control" id="status" [(ngModel)]="incidentM.status" name="status" >
+                <option value="Open">Open</option>
+                <option value="InProgress">InProgress</option>
+                <option value="ReadyToClose">ReadyToClose</option>
+                <option *ngIf="isUpdating" value="Closed">Closed</option>
+            </select>
+        </div>
+        <div class ="form-group" *ngIf="isUpdating" >
+            <label>Resolution</label>
+            <input type="text" class="form-control" id="resolution" 
+            [(ngModel)] = "incidentM.resolution" #resolution="ngModel" name = "resolution" [required]="incidentM.status === 'Closed'">
+            <span *ngIf="resolution.errors?.['required']">Resolution is Required.</span> 
+        </div>
+
+        <div class="form-group text-right" style="margin-top: 20px;">
+            <button class="btn btn-warn" (click)="cancel()" type = "submit">Cancel</button>
+        <button class="btn btn-success" type = "submit" [disabled]="closedDateError ||iruForm.invalid">{{ isUpdating ? 'Update' : 'Add' }}</button>
+        </div>
+    </form>
+</div>

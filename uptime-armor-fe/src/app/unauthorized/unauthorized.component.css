@@ -1,0 +1,35 @@
+.unauthorized-container {
+    text-align: center;
+  }
+  
+  .unauthorized-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .unauthorized-image{
+    size: 60%;
+    height: 550px;
+  }
+  
+  .unauthorized-message {
+    font-size: 20px;
+    margin-bottom: 30px;
+    color: #0d67a3;
+  }
+  
+  .btn-unauthorized {
+    border-radius: 20px;
+    border-width: 2px;
+    background-color: #0d67a3;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 50px;
+  }
+
+  .btn-unauthorized:hover{
+    color: #fff;
+    text-shadow: 3px 3px rgba(255,255,255,0.2);
+  }
+
+
+ 

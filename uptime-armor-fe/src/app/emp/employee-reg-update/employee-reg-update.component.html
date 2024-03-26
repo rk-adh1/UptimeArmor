@@ -1,0 +1,148 @@
+<div class = "register-page col-md-6 offset-md-3">
+    <h3>{{ isUpdating ? 'Update Employee' : 'Add Employee' }}</h3>
+    <form #eruForm="ngForm" (ngSubmit) = "onSubmit()">
+        <div class ="form-group" *ngIf="isUpdating"> 
+            <label>EmployeeID</label>
+            <input type="text" readonly class="form-control" id="employeeId" 
+            [(ngModel)] = "this.employeeId" name = "employeeId">
+        </div>
+        <div class ="form-group" *ngIf="!isUpdating"> 
+            <label>Temp Password</label>
+            <input type="password" class="form-control" id="password"
+            [(ngModel)] = "employeeM.password" name = "password" #password="ngModel" required="true">
+            <div *ngIf="password.invalid && (password.dirty || password.touched)">
+                <span class="error-message" *ngIf="password.errors?.['required']">Password is required.</span>
+            </div>
+        </div>
+        <div class ="form-group">
+            <label>FirstName</label>
+            <input type="text" class="form-control" id="firstName" 
+            [(ngModel)] = "employeeM.firstName" name = "firstName" #firstName="ngModel" required="true">
+            <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+                <span class="error-message" *ngIf="firstName.errors?.['required']">FirstName is required.</span>
+            </div>
+        </div>
+        <div class ="form-group">
+            <label>LastName</label>
+            <input type="text" class="form-control" id="lastName" 
+            [(ngModel)] = "employeeM.lastName" name = "lastName" #lastName="ngModel" required="true">
+            <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+                <span class="error-message" *ngIf="lastName.errors?.['required']">LastName is required.</span>
+            </div>
+        </div>
+        <div class ="form-group">
+            <label>DataOfBirth</label>
+            <input type="date" class="form-control" id="dateOfBirth" 
+            [(ngModel)] = "employeeM.dateOfBirth" name = "dateOfBirth" #dateOfBirth="ngModel" 
+            [max]="today" required
+           (change)="validateDateOfBirth(dateOfBirth)">
+           <div *ngIf="dateOfBirth.invalid && (dateOfBirth.dirty || dateOfBirth.touched)">
+            <span class="error-message" *ngIf="dateOfBirth.errors?.['required']">Date of Birth is required.</span>
+            <span class="error-message" *ngIf="dateOfBirth.errors?.['invalidDate']">Date of Birth cannot be in the future and should indicate an age of 18 years or older.</span>
+        </div>
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <select class="form-control" id="gender" [(ngModel)]="this.selectedGender" name="gender" (change)="onGenderChange($event)">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <input *ngIf="showOtherInput" type="text" class="form-control" id="otherGender" [(ngModel)]="otherGender" name="otherGender">
+        </div>
+        <div class ="form-group">
+            <label>Address</label>
+            <input type="text" class="form-control" id="address" 
+            [(ngModel)] = "employeeM.address" name = "address">
+        </div>
+        <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" class="form-control" id="phoneNumber" 
+                   [(ngModel)]="employeeM.phoneNumber" name="phoneNumber" #phoneNumber="ngModel" 
+                   [ngClass]="{'is-invalid': phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)}" 
+                   pattern="\d{10}" required>
+            <div class="invalid-feedback" *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)">
+              <div *ngIf="phoneNumber.errors?.['required']">Phone number is required.</div>
+              <div *ngIf="phoneNumber.errors?.['pattern']">Phone number must be a 10-digit number.</div>
+            </div>
+          </div>
+         
+        <div class ="form-group" *ngIf="isUpdating" >
+            <label>Email</label>
+            <input type="text" readonly class="form-control" id="email" 
+            [(ngModel)] = "this.email" name = "email">
+        </div>
+        <div class ="form-group" >
+            <label>JobTitle</label>
+            <input type="text" class="form-control" id="jobTitle" 
+            [(ngModel)] = "employeeM.jobTitle" name = "jobTitle" [readonly]="isUpdating && authService.isEmployee()">
+        </div>
+        <div class="form-group">
+            <label for="manager">Manager</label>
+            <select class="form-control" id="manager" name="manager" [(ngModel)]="this.selectedManagerId" [disabled]="isUpdating && !authService.isAdmin()">
+                <ng-container  >
+                    <option *ngFor="let manager of managers | async" [ngValue]="manager.employeeId">
+                        {{ manager.employeeId }} - {{ manager.firstName }} {{ manager.lastName }}
+                    </option>
+                </ng-container>
+            </select> 
+        </div>
+        <!-- <div class ="form-group" >
+            <label>EmploymentStatus</label>
+            <input type="text" class="form-control" id="employmentStatus" 
+            [(ngModel)] = "employeeM.employmentStatus" name = "employmentStatus" [readonly]="isUpdating">
+        </div> -->
+        <div class="form-group">
+            <label>EmploymentStatus</label>
+            <select class="form-control" id="employmentStatus" [(ngModel)]="employeeM.employmentStatus" name="employmentStatus"  [disabled]="isUpdating && !authService.isAdmin()">
+                <option value="Active">Active</option>
+                <option value="InActive">InActive</option>
+            </select>
+        </div>
+
+        <!-- <div class ="form-group">
+            <label>Role</label>
+            <input type="text" class="form-control" id="role" 
+            [(ngModel)] = "employeeM.role" name = "role" [readonly]="isUpdating" #role="ngModel" required="true">
+            <div *ngIf="role.invalid && (role.dirty || role.touched)">
+                <span class="error-message" *ngIf="role.errors?.['required']">Role is required.</span>
+            </div>
+        </div> -->
+
+        <div class="form-group">
+            <label>Role</label>
+            <select class="form-control" id="role" 
+            [(ngModel)] = "employeeM.role" name = "role" [disabled]="isUpdating && !authService.isAdmin()" #role="ngModel" required="true"> 
+                <option value="ADMIN">ADMIN</option>
+                <option value="MANAGER">MANAGER</option>
+                <option value="EMPLOYEE">EMPLOYEE</option>
+            </select>
+            <div *ngIf="role.invalid && (role.dirty || role.touched)">
+                <span class="error-message" *ngIf="role.errors?.['required']">Role is required.</span>
+            </div>
+        </div>
+       
+        
+        <!-- <div class ="form-group">
+            <label>BusinessUnitId</label>
+            <input type="text" class="form-control" id="businessUnitId" 
+            [(ngModel)] = "employeeM.businessUnit.businessUnitId" name = "businessUnitId" [readonly]="isUpdating">
+        </div> -->
+
+        <div class="form-group">
+            <label for="businessUnitId">BusinessUnitId</label>
+            <select class="form-control" id="businessUnitId" name="businessUnitId" [(ngModel)]="this.selectedBUId" [disabled]="isUpdating">
+                <ng-container  >
+                    <option *ngFor="let businessUnit of businessUnits | async" [ngValue]="businessUnit.businessUnitId">
+                        {{ businessUnit.businessUnitId }}
+                    </option>
+                </ng-container>
+            </select> 
+        </div>
+
+        <div class="form-group text-right" style="margin-top: 20px;">
+        <button class="btn btn-warn" (click)="cancel()" type = "submit">Cancel</button>
+        <button class="btn btn-success" type = "submit" [disabled]="eruForm.invalid">{{ isUpdating ? 'Update' : 'Add' }}</button>
+        </div>
+    </form>
+</div>

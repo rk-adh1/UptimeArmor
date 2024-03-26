@@ -1,0 +1,18 @@
+.chart-container {
+    width: 50%;
+    padding: 10px;
+    /* border: 1px solid rgb(245, 245, 245);
+     */
+  }
+  
+  .export_btn{
+    color: black;
+    background-color: #bbd42b;
+    text-align: center;
+    width: 80px;
+    }
+    
+  .export_btn:hover{
+    color: black;
+    background-color: rgb(88, 233, 15);
+    }

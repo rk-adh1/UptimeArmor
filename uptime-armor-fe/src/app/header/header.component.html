@@ -1,0 +1,80 @@
+<head>
+		<link rel="stylesheet" type="text/css" href="header.component.css">
+</head>
+
+<nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark" *ngIf="isLoggedIn$ | async as isLoggedIn">
+    <a class="navbar-brand" href="#">UptimeArmor</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <a class="nav-link" [routerLink]="['/home']">
+            <i class="fa fa-home"></i>
+            Home
+            <span class="sr-only">(current)</span>
+            </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" >
+          <a class="nav-link" [routerLink]="['/business']">
+            <i class="fa fa-sitemap">
+            </i>
+            Business Unit
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <a class="nav-link" [routerLink]="['/employee']">
+            <i class="fa fa-users">
+            </i>
+            Employees
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <a class="nav-link" [routerLink]="['/incident']">
+            <i class="fa fa-exclamation-circle">
+            </i>
+            Incidents
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <a class="nav-link" [routerLink]="['/outage']">
+            <i class="fa fa-times-circle">
+            </i>
+            Outages
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <a class="nav-link" [routerLink]="['/reports']">
+            <i class="fa fa-bar-chart">
+            </i>
+            Reports
+          </a>
+        </li>
+ 
+      </ul>
+      <div class="dropdown">
+        <a class="nav-link dropdown-toggle mr-3" style="color: rgba(255,255,255,0.5);" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-user"></i> MyProfile
+        </a>
+        <div class="dropdown-menu dropdown-menu-right bg-dark" style="border-color: rgba(255,255,255,0.5); border-radius: 15px;" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" style="color: rgba(255,255,255,0.5);" href="home"
+            onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.1)'; this.style.borderRadius='15px';" 
+            onmouseout="this.style.backgroundColor='transparent';" 
+            onfocus="this.style.backgroundColor='rgba(255, 255, 255, 0.1)'; this.style.borderRadius='15px';" 
+            onblur="this.style.backgroundColor='transparent';">
+            <i class="fa fa-id-card"></i> MyDetails
+          </a>
+          <a class="dropdown-item" style="color: rgba(255,255,255,0.5);" href="employee/updatePassword"
+            onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.1)'; this.style.borderRadius='15px';" 
+            onmouseout="this.style.backgroundColor='transparent';" 
+            onfocus="this.style.backgroundColor='rgba(255, 255, 255, 0.1)'; this.style.borderRadius='15px';" 
+            onblur="this.style.backgroundColor='transparent';">
+            <i class="fa fa-lock"></i> UpdatePassword
+          </a>
+        </div>
+      </div>
+      <button mat-button (click)="onLogout()" *ngIf="isLoggedIn" class="btn float-right logout_btn">Logout</button>     
+    </div>
+  </nav>
+

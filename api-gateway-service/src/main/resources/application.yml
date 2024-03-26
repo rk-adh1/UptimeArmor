@@ -1,0 +1,91 @@
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+          corsConfigurations:
+            '[/**]':
+              allowedOrigins: "http://localhost:4200"
+              allowedMethods: "*"
+              allowedHeaders: "*"
+      routes:
+        - id: identity-service-getToken
+          uri: lb://IDENTITY-SERVICE
+          predicates:
+            - Path=/api/auth/getToken
+
+        - id: identity-service-validateToken
+          uri: lb://IDENTITY-SERVICE
+          predicates:
+            - Path=/api/auth/validateJWTToken/**
+          filters:
+            - AuthenticationFilter
+
+        - id: identity-service-renewToken
+          uri: lb://IDENTITY-SERVICE
+          predicates:
+            - Path=/api/auth/renewToken/**
+          filters:
+            - AuthenticationFilter
+
+        - id: identity-passUpdate
+          uri: lb://IDENTITY-SERVICE
+          predicates:
+            - Path=/api/auth/updatePassword/**
+          filter:
+            - AuthenticationFilter
+
+        - id: employee-service
+          uri: lb://EMPLOYEE-SERVICE
+          predicates:
+            - Path=/api/employee/**
+          filters:
+            - AuthenticationFilter
+
+        - id: incident-service
+          uri: lb://INCIDENT-SERVICE
+          predicates:
+            - Path=/api/incident/**
+          filters:
+            - AuthenticationFilter
+
+        - id: business-unit
+          uri: lb://BUSINESS-UNIT
+          predicates:
+            - Path=/api/businessUnit/**
+          filters:
+            - AuthenticationFilter
+
+        - id: outage-tickets
+          uri: lb://INCIDENT-SERVICE
+          predicates:
+            - Path=/api/outage/**
+          filter:
+            - AuthenticationFilter
+
+        - id: comments
+          uri: lb://INCIDENT-SERVICE
+          predicates:
+            - Path=/api/comment/**
+          filter:
+            - AuthenticationFilter
+
+        - id: reports
+          uri: lb://INCIDENT-SERVICE
+          predicates:
+            - Path=/api/reports/**
+          filter:
+            - AuthenticationFilter
+
+
+  application:
+    name: API-GATEWAY-SERVICE
+
+server:
+  port: 9090
+
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka/
